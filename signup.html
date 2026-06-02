@@ -24,7 +24,6 @@
     <input type="email" id="signupEmail" placeholder="Enter Email" required>
     <input type="password" id="signupPass" placeholder="Create Password" required>
     <button type="submit">Sign Up</button>
-    <!-- <button onclick="clearAllAccounts()">Admin Panel</button> -->
     </form>
       <p class="switch-text">Already have an account? <a href="login.html">Login</a></p>
     </div>
@@ -44,7 +43,7 @@
   }
 
   document.getElementById("signupForm").addEventListener("submit", function(e) {
-    e.preventDefault(); // Page refresh roka
+    e.preventDefault();
     
     let username = document.getElementById("signupUser").value.trim();
     let email = document.getElementById("signupEmail").value.trim();
@@ -52,12 +51,12 @@
 
     if (email.indexOf("@") === -1 || email.indexOf(".") === -1) {
       triggerAlert("Please enter a valid email address!", "📧", "#ef4444");
-      return; // Code yahan ruk jayega agar email galat hua
+      return;
     }
 
     if (pass.length < 6) {
       triggerAlert("Password must be at least 6 characters long!", "🔑", "#ef4444");
-      return; /
+      return; 
     }
 
     let registeredUsers = JSON.parse(sessionStorage.getItem("network_db")) || [];
@@ -96,10 +95,7 @@
       window.location.href = "login.html?user=" + encodeURIComponent(username);
     }, 2000);
   });
-//   function clearAllAccounts() {
-//     sessionStorage.removeItem("network_db");
-//     alert("Pura database delete ho gaya hai! Ab saare accounts saaf hain.");
-// }
+
 </script>
 </body>
 </html>
