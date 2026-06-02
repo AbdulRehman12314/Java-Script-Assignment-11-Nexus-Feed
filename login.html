@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusFeed // Access Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="customAlert" class="custom-alert">
+    <div class="alert-content">
+      <span id="alertIcon">⚠️</span>
+      <p id="alertMessage">Security Check</p>
+    </div>
+  </div>
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <h2>Welcome <span>Back</span></h2>
+      <p>Verify your credentials to enter the feed</p>
+      <form id="loginForm">
+        <input type="text" id="loginUser" placeholder="Username" required>
+        <input type="password" id="loginPass" placeholder="Password" required>
+        <button type="submit">Log In</button>
+      </form>
+      <p class="switch-text">Don't have an account? <a href="signup.html">Sign Up</a></p>
+    </div>
+  </div>
+
+  <script>
+    function triggerAlert(message, icon, color) {
+      const alertBox = document.getElementById("customAlert");
+      const alertMsg = document.getElementById("alertMessage");
+      const alertIco = document.getElementById("alertIcon");
+      alertMsg.innerText = message;
+      alertIco.innerText = icon;
+      alertBox.style.borderColor = color;
+      alertBox.style.boxShadow = "0 0 20px " + color;
+      alertBox.classList.add("show");
+      setTimeout(function() { alertBox.classList.remove("show"); }, 2500);
+    }
+
+    let urlParams = new URLSearchParams(window.location.search);
+    let registeredUser = urlParams.get('user');
+    if (registeredUser) {
+      document.getElementById("loginUser").value = registeredUser;
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      let inputUser = document.getElementById("loginUser").value.trim();
+      let inputPass = document.getElementById("loginPass").value;
+
+      let registeredUsers = JSON.parse(sessionStorage.getItem("network_db")) || [];
+
+      // 2) CREDENTIALS VERIFICATION ENGINE
+      let matchFound = false;
+      for (let i = 0; i < registeredUsers.length; i++) {
+        if (registeredUsers[i].user.toLowerCase() === inputUser.toLowerCase() && registeredUsers[i].password === inputPass) {
+          matchFound = true;
+          break;
+        }
+      }
+
+      if (!matchFound) {
+        triggerAlert("Invalid Username or Password! Access Denied.", "🔒", "#ef4444");
+        return;
+      }
+
+      triggerAlert("Access Granted! Loading system core...", "🔓", "#00f5ff");
+      
+      setTimeout(function() {
+        window.location.href = "feed.html?user=" + encodeURIComponent(inputUser);
+      }, 1500);
+    });
+  </script>
+</body>
+</html>

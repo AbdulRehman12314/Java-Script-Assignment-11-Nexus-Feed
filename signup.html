@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusFeed // Join the Network</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="customAlert" class="custom-alert">
+    <div class="alert-content">
+      <span id="alertIcon">⚠️</span>
+      <p id="alertMessage">Initial State</p>
+    </div>
+  </div>
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <h2>Create <span>Account</span></h2>
+      <p>Join the secure developer network</p>
+      <form id="signupForm">
+    <input type="text" id="signupUser" placeholder="Choose Username" required>
+    <input type="email" id="signupEmail" placeholder="Enter Email" required>
+    <input type="password" id="signupPass" placeholder="Create Password" required>
+    <button type="submit">Sign Up</button>
+    <!-- <button onclick="clearAllAccounts()">Admin Panel</button> -->
+    </form>
+      <p class="switch-text">Already have an account? <a href="login.html">Login</a></p>
+    </div>
+  </div>
+
+ <script>
+  function triggerAlert(message, icon, color) {
+    const alertBox = document.getElementById("customAlert");
+    const alertMsg = document.getElementById("alertMessage");
+    const alertIco = document.getElementById("alertIcon");
+    alertMsg.innerText = message;
+    alertIco.innerText = icon;
+    alertBox.style.borderColor = color;
+    alertBox.style.boxShadow = "0 0 20px " + color;
+    alertBox.classList.add("show");
+    setTimeout(function() { alertBox.classList.remove("show"); }, 2500);
+  }
+
+  document.getElementById("signupForm").addEventListener("submit", function(e) {
+    e.preventDefault(); // Page refresh roka
+    
+    // Teeno inputs ko unki clear ID se uthaya
+    let username = document.getElementById("signupUser").value.trim();
+    let email = document.getElementById("signupEmail").value.trim();
+    let pass = document.getElementById("signupPass").value;
+
+    // 1) EMAIL VALIDATION CHECK
+    if (email.indexOf("@") === -1 || email.indexOf(".") === -1) {
+      triggerAlert("Please enter a valid email address!", "📧", "#ef4444");
+      return; // Code yahan ruk jayega agar email galat hua
+    }
+
+    // 2) PASSWORD LENGTH CHECK
+    if (pass.length < 6) {
+      triggerAlert("Password must be at least 6 characters long!", "🔑", "#ef4444");
+      return; // Code yahan ruk jayega agar password chota hua
+    }
+
+    // Database load from SessionStorage
+    let registeredUsers = JSON.parse(sessionStorage.getItem("network_db")) || [];
+
+        // 3) DUPLICATE USERNAME & EMAIL CHECK (FULLY SAFE VERSION)
+    let userExists = false;
+    let emailExists = false;
+
+    for (let i = 0; i < registeredUsers.length; i++) {
+    // Safe Username Check
+    if (registeredUsers[i].user && registeredUsers[i].user.toLowerCase() === username.toLowerCase()) {
+        userExists = true;
+        break;
+    }
+    
+    // SAFE EMAIL CHECK: Pehle check karo email exist karta hai, phir compare karo
+    if (registeredUsers[i].email && registeredUsers[i].email.toLowerCase() === email.toLowerCase()) {
+        emailExists = true;
+        break;
+    }
+    }
+    if (userExists) {
+      triggerAlert("Username is already taken! Try another one.", "❌", "#ef4444");
+      return;
+    }
+
+    if (emailExists) {
+      triggerAlert("This email is already registered! Try logging in.", "✉️", "#ef4444");
+      return;
+    }
+
+    // Agar saare check paas ho gaye, toh data array mein daal kar save karo
+    registeredUsers.push({ user: username, email: email, password: pass });
+    sessionStorage.setItem("network_db", JSON.stringify(registeredUsers));
+
+    triggerAlert("Account secured! Redirecting to login...", "🚀", "#22c55e");
+    
+    // Sahi details par loop chalne ke baad browser user ko bhej dega login page par
+    setTimeout(function() {
+      window.location.href = "login.html?user=" + encodeURIComponent(username);
+    }, 2000);
+  });
+//   function clearAllAccounts() {
+//     sessionStorage.removeItem("network_db");
+//     alert("Pura database delete ho gaya hai! Ab saare accounts saaf hain.");
+// }
+</script>
+</body>
+</html>
