@@ -46,38 +46,32 @@
   document.getElementById("signupForm").addEventListener("submit", function(e) {
     e.preventDefault(); // Page refresh roka
     
-    // Teeno inputs ko unki clear ID se uthaya
     let username = document.getElementById("signupUser").value.trim();
     let email = document.getElementById("signupEmail").value.trim();
     let pass = document.getElementById("signupPass").value;
 
-    // 1) EMAIL VALIDATION CHECK
     if (email.indexOf("@") === -1 || email.indexOf(".") === -1) {
       triggerAlert("Please enter a valid email address!", "📧", "#ef4444");
       return; // Code yahan ruk jayega agar email galat hua
     }
 
-    // 2) PASSWORD LENGTH CHECK
     if (pass.length < 6) {
       triggerAlert("Password must be at least 6 characters long!", "🔑", "#ef4444");
-      return; // Code yahan ruk jayega agar password chota hua
+      return; /
     }
 
-    // Database load from SessionStorage
     let registeredUsers = JSON.parse(sessionStorage.getItem("network_db")) || [];
 
-        // 3) DUPLICATE USERNAME & EMAIL CHECK (FULLY SAFE VERSION)
     let userExists = false;
     let emailExists = false;
 
     for (let i = 0; i < registeredUsers.length; i++) {
-    // Safe Username Check
-    if (registeredUsers[i].user && registeredUsers[i].user.toLowerCase() === username.toLowerCase()) {
+
+      if (registeredUsers[i].user && registeredUsers[i].user.toLowerCase() === username.toLowerCase()) {
         userExists = true;
         break;
     }
     
-    // SAFE EMAIL CHECK: Pehle check karo email exist karta hai, phir compare karo
     if (registeredUsers[i].email && registeredUsers[i].email.toLowerCase() === email.toLowerCase()) {
         emailExists = true;
         break;
@@ -93,13 +87,11 @@
       return;
     }
 
-    // Agar saare check paas ho gaye, toh data array mein daal kar save karo
     registeredUsers.push({ user: username, email: email, password: pass });
     sessionStorage.setItem("network_db", JSON.stringify(registeredUsers));
 
     triggerAlert("Account secured! Redirecting to login...", "🚀", "#22c55e");
     
-    // Sahi details par loop chalne ke baad browser user ko bhej dega login page par
     setTimeout(function() {
       window.location.href = "login.html?user=" + encodeURIComponent(username);
     }, 2000);
