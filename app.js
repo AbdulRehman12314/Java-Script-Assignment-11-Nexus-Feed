@@ -1,26 +1,21 @@
 let globalPosts = [];
 let activeEditIndex = -1;
 
-// URL parameters parsing
 let urlParams = new URLSearchParams(window.location.search);
 let username = urlParams.get('user');
 
 if (username) {
-  // Update name tag
   document.getElementById("displayUser").innerText = username;
 
-  // ==========================================
-  // 3) DYNAMIC INITIALS GENERATOR LOGIC
-  // ==========================================
   let cleanName = username.trim();
-  let words = cleanName.split(" "); // Name ko spaces se toorhein array mein
+  let words = cleanName.split(" ");
   let initials = "";
 
   if (words.length > 1) {
-    // Agar full name hai, toh pehle do words ka first character uthao (e.g., Abdul Rehman -> AR)
+    
     initials = words[0].charAt(0).toUpperCase() + words[1].charAt(0).toUpperCase();
   } else {
-    // Agar single word name hai, toh pehle word ka single ya double chars uthao (e.g., Shahzaib -> S)
+    
     initials = words[0].charAt(0).toUpperCase();
   }
   
@@ -28,7 +23,6 @@ if (username) {
   document.getElementById("userAvatar").innerText = initials;
 }
 
-// DOM cache declarations
 const postForm = document.getElementById("postForm");
 const postTitle = document.getElementById("postTitle");
 const postContent = document.getElementById("postContent");
