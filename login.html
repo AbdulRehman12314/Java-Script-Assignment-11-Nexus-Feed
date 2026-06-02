@@ -54,8 +54,7 @@
       let inputPass = document.getElementById("loginPass").value;
 
       let registeredUsers = JSON.parse(sessionStorage.getItem("network_db")) || [];
-
-      // 2) CREDENTIALS VERIFICATION ENGINE
+      
       let matchFound = false;
       for (let i = 0; i < registeredUsers.length; i++) {
         if (registeredUsers[i].user.toLowerCase() === inputUser.toLowerCase() && registeredUsers[i].password === inputPass) {
